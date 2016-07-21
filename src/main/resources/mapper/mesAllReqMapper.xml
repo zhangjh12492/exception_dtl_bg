@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.exception.dal.dao.MesAllProcessMapper">
+	
+	<resultMap id="mesAllMap" type="MesAllProcessReq" >
+		<id column="id" property="id"/>
+		<result column="code" property="code"/>
+		<result column="warn_count" property="warn_count"/>
+		<result column="error_count" property="error_count"/>
+		<result column="created_time" property="created_time"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="MesAllProcessReq" useGeneratedKeys="true" keyProperty="param.id">
+		insert into mes_all_process_req(code,warn_count,error_count,created_time)
+		values(
+		#{param.code},
+		#{param.warnCount},
+		#{param.errorCount},
+		#{param.createdTime}
+		)
+	</insert>
+</mapper>

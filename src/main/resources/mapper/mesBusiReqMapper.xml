@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.exception.dal.dao.MesBusiProcessMapper">
+	
+	<resultMap id="mesBusiMap" type="MesBusiProcessReq" >
+		<id column="id" property="id"/>
+		<result column="busi_code" property="busiCode"/>
+		<result column="busi_Warn_Count" property="busiWarnCount"/>
+		<result column="busi_Err_Count" property="busiErrCount"/>
+		<result column="sys_Code" property="sysCode"/>
+		<result column="sys_id" property="sysId"/>
+		<result column="created_time" property="createdTime"/>
+		<result column="err_id" property="errId"/>
+		<result column="err_mess_id" property="errMessId"/>
+		<result column="warn_mess_id" property="warnMessId"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="MesBusiProcessReq" useGeneratedKeys="true" keyProperty="param.id">
+		insert into mes_busi_process_req(busi_warn_count,busi_err_count,sys_id,busi_code,sys_code,created_time,err_id,err_mess_id,warn_mess_id)
+		values(
+		#{param.busiWarnCount},
+		#{param.busiErrCount},
+		#{param.sysId},
+		#{param.busiCode},
+		#{param.sysCode},
+		#{param.createdTime},
+		#{param.errId},
+		#{param.errMessId},
+		#{param.warnMessId}
+		)
+	</insert>
+</mapper>

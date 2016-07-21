@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:hdp="http://www.springframework.org/schema/hadoop"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/hadoop
+       http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+       ">
+
+	<!-- 自动扫描beans+注解功能注册 -->  
+    <!-- <context:component-scan base-package="com.xxx.xxx" />   -->
+      
+    <!-- 根据配置文件生成hadoopConfiguration -->  
+    <hdp:configuration resources="classpath:hadoop/hbase-site.xml" />
+    
+    <!-- <hdp:hbase-configuration configuration-ref="hadoopConfiguration" />   -->
+    
+    <bean id="hbaseTemplate" class="org.springframework.data.hadoop.hbase.HbaseTemplate">  
+        <!-- hadoopConfiguration == hdp:configuration -->  
+        <property name="configuration" ref="hadoopConfiguration" />  
+    </bean>  
+      
+    <!-- <bean id="hbaseInterceptor" class="org.springframework.data.hadoop.hbase.HbaseInterceptor">  
+        <property name="configuration" ref="hadoopConfiguration" />  
+        
+    </bean>   -->
+      
+    <!-- 使用aop增强, 织入hbase数据库链接的开启和关闭  -->  
+    <!-- <aop:config>  
+        <aop:pointcut id="allManagerMethod"  
+            expression="execution(* com.xxx.xxx.*.service..*(..))" />  
+        <aop:advisor advice-ref="hbaseInterceptor" pointcut-ref="allManagerMethod" />  
+    </aop:config>   -->
+    
+</beans>

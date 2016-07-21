@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.exception.dal.dao.MesSysProcessMapper">
+	
+	<resultMap id="mesSysReq" type="MesSysProcessReq" >
+		<result column="id" property="id"/>
+		<result column="SYS_WARN_COUNT" property="sysWarnCount"/>
+		<result column="SYS_ERR_COUNT" property="sysErrCount"/>
+		<result column="CREATED_TIME" property="createdTime"/>
+		<result column="SYS_CODE" property="sysCode"/>
+	</resultMap>
+	<resultMap id="mesSysBusiProcess" type="MesSysProcessReq" >
+		<id column="id" property="id"/>
+		<result column="SYS_WARN_COUNT" property="sysWarnCount"/>
+		<result column="SYS_ERR_COUNT" property="sysErrCount"/>
+		<result column="CREATED_TIME" property="createdTime"/>
+		<result column="SYS_CODE" property="sysCode"/>
+		<collection property="busiList" ofType="MesBusiProcessReq" column="sys_id">
+			<id column="id" property="id"/>
+			<result column="BUSI_CODE" property="busiCode"/>
+			<result column="BUSI_WARN_COUNT" property="busiWarnCount"/>
+			<result column="BUSI_ERR_COUNT" property="busiErrCount"/>
+			<result column="SYS_CODE" property="sysCode"/>
+			<result column="SYS_ID" property="sysId"/>
+			<result column="CREATED_TIME" property="createdTime"/>
+			<result column="ERR_ID" property="errId"/>
+		</collection>
+	</resultMap>
+	
+	
+	<insert id="insert"  parameterType="MesSysProcessReq"> <!-- useGeneratedKeys="true" keyProperty="param.id" -->
+		<selectKey keyColumn="id" keyProperty="param.id" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+		INSERT INTO mes_sys_process_req(SYS_WARN_COUNT,SYS_ERR_COUNT,SYS_CODE,CREATED_TIME)
+		VALUES(
+		#{param.sysWarnCount},
+		#{param.sysErrCount},
+		#{param.sysCode},
+		#{param.createdTime}
+		)
+		
+	</insert>
+	
+	<!-- <select id="selectBySysCode" resultMap="mesSysBusiProcess"> 
+		select * 
+		from mes_sys_process_req  
+		where  sys_code=#{sysCode} 
+		
+	</select> -->
+	
+	<select id="selectBySysCode" resultMap="mesSysBusiProcess"> 
+		SELECT S.ID,S.SYS_WARN_COUNT,S.SYS_ERR_COUNT,S.SYS_CODE,B.BUSI_CODE,B.BUSI_WARN_COUNT,B.BUSI_ERR_COUNT 
+		FROM mes_sys_process_req S,mes_busi_process_req B 
+		WHERE S.SYS_CODE=#{sysCode} 
+		AND S.ID=B.SYS_ID 
+		AND S.ID=(SELECT MAX(ID) FROM mes_sys_process_req) 
+		
+	</select>
+</mapper>

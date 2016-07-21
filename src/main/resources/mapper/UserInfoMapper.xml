@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.exception.dal.dao.UserInfoMapper">
+	
+	<resultMap id="userInfo" type="UserInfo" >
+		<result column="id" property="id"/>
+		<result column="user_code" property="userCode"/>
+		<result column="user_name" property="userName"/>
+		<result column="tel" property="tel"/>
+		<result column="email" property="email"/>
+	</resultMap>
+	
+	<resultMap type="com.wfj.exception.dal.vo.UserInfoVo" id="userInfoVo">
+		<result column="user_code" property="userCode"/>
+		<result column="user_name" property="userName"/>
+		<result column="tel" property="tel"/>
+		<result column="email" property="email"/>
+		<result column="send_type" property="sendType"/>
+	</resultMap>
+	
+	
+	<insert id="insertUserInfo" parameterType="UserInfo">
+		insert into user_info(user_code,user_name,busi_id,sys_id)
+		values(#{param.userCode},#{param.userName},#{param.busi_id},#{param.sys_id})
+	</insert>
+	
+	<select id="selectAllUserVo" resultMap="userInfoVo">
+		<![CDATA[
+		select * from user_info where id in(
+		select user_info_id from user_group_user_info_ref where user_group_id in(
+		select user_group_id from sys_info_user_group_ref where sys_id=(select id from sys_info where sys_code=#{sysCode}) ))
+		]]>
+	</select>
+	
+	<select id="selectSendType" resultType="java.lang.String" parameterType="java.util.Map">
+		<![CDATA[
+		select send_type from user_group where id=(select user_group_id from user_group_user_info_ref where user_info_id=#{userId} )
+		and id = (select user_group_id from sys_info_user_group_ref 
+		where sys_id=(select id from sys_info where sys_code=#{sysCode} ))
+		]]>
+	</select>
+	
+	
+</mapper>

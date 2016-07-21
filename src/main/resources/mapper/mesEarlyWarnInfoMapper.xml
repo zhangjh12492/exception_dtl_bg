@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.exception.dal.dao.MesEarlyWarnInfoMapper">
+	
+	
+	<resultMap id="mesEarlyWarnInfo" type="MesEarlyWarnInfo" >
+		<result column="id" property="id"/>
+		<result column="description" property="description"/>
+		<result column="url" property="url"/>
+		<result column="flag" property="flag"/>
+		<result column="status" property="status"/>
+		<result column="count" property="count"/>
+		<result column="send_type" property="sendType"/>
+		<result column="err_level" property="errLevel"/>
+		<result column="reserved1" property="reserved1"/>
+		<result column="reserved2" property="reserved2"/>
+		<result column="reserved3" property="reserved3"/>
+		<result column="reserved4" property="reserved4"/>
+	</resultMap>
+	
+	<insert id="insertEarlyWarn" parameterType="MesEarlyWarnInfo" keyProperty="param.id" useGeneratedKeys="true">
+		<![CDATA[  
+		insert into mes_early_warn_info(description,flag,status,warn_count,error_count,sys_id,busi_id,send_type) 
+		values(#{description},#{flag},#{status},#{warnCount},#{errorCount},#{sysId},#{busiId},#{sendType})
+			
+			]]>
+	</insert>
+	
+	<select id="selectAllEarlyWarn" resultMap="mesEarlyWarnInfo">
+		select * from mes_early_warn_info 
+		where 1=1
+		<if test="id!=null and id!=''">
+			and id=#{id}
+		</if>
+	</select>
+	
+	<select id="selectAllSysStartEW" resultMap="mesEarlyWarnInfo" parameterType="java.util.Map">
+		
+	   <![CDATA[	
+	    select * from mes_early_warn_info w 
+		where 1=1
+		and w.flag='0'
+		and w.status='0'
+		and w.count<=#{count}
+		and w.id in (select ew_id from earlywarn_sys_ref where sys_id= (select id from sys_info where sys_code=#{sysCode}))
+		]]>
+	</select>
+	
+	<select id="selectAllBusiStartEW" resultMap="mesEarlyWarnInfo"  parameterType="java.util.Map">
+		<![CDATA[
+			select * from mes_early_warn_info w
+			where 1=1
+			and w.flag='0'
+			and w.status=#{status}
+			and w.count<=#{count}
+			and w.id in 
+			(select ew_id from earlywarn_busi_ref 
+			where busi_id=(select id from busi_info 
+			where busi_code=#{busiCode} and sys_id=(select id from sys_info where sys_code=#{sysCode})) ) 
+		]]>
+	</select>
+</mapper>

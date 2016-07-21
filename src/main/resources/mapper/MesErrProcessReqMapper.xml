@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wfj.exception.dal.dao.MesErrProcessMapper">
+    <sql id="qrySelect">
+        select id id,
+			sys_id sysId,
+			busi_id busiId,
+			sys_code sysCode,
+			busi_code busiCode,
+			err_code errCode,
+			all_code allCode,
+			err_err_count errErrCount,
+			err_warn_count errWarnCount,
+			created_time createdTime,
+			process_status processStatus
+    </sql>
+
+    <select id="selectByBusiId" resultType="MesErrProcessReq">
+        <include refid="qrySelect"/>
+        from mes_err_process_req
+        where
+        busi_id=#{busiId}
+    </select>
+
+    <insert id="insertMesErrProcess" useGeneratedKeys="true" keyProperty="param.id">
+        
+        insert into mes_err_process_req (
+        	sys_id,
+			busi_id,
+			sys_code,
+			busi_code,
+			err_code,
+			all_code,
+			err_err_count,
+			err_warn_count,
+			created_time,
+			process_status
+            ) values (
+        	#{param.sysId},
+			#{param.busiId},
+			#{param.sysCode},
+			#{param.busiCode},
+			#{param.errCode},
+			#{param.allCode},
+			#{param.errErrCount},
+			#{param.errWarnCount},
+			#{param.createdTime},
+			#{param.processStatus}
+        )
+    </insert>
+
+    
+</mapper>
